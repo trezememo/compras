@@ -282,7 +282,7 @@ export const ShoppingList = () => {
                         onValueChange={setCategorySearch}
                         className="border-violet-500/30"
                       />
-                      <CommandList>
+                      <CommandList className="max-h-[300px]">
                         <CommandEmpty>Nenhuma categoria encontrada.</CommandEmpty>
                         <CommandGroup>
                           {CATEGORIES
@@ -298,7 +298,7 @@ export const ShoppingList = () => {
                                   setCategoryOpen(false);
                                   setCategorySearch("");
                                 }}
-                                className="text-white hover:bg-violet-800 focus:bg-violet-800"
+                                className="text-white hover:bg-violet-800 focus:bg-violet-800 cursor-pointer"
                               >
                                 <Check
                                   className={`mr-2 h-4 w-4 ${
