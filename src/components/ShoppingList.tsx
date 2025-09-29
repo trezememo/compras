@@ -205,9 +205,9 @@ export const ShoppingList = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-purple-950 via-background to-purple-900/20 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500 mx-auto mb-4"></div>
           <p className="text-muted-foreground">Carregando lista...</p>
         </div>
       </div>
@@ -215,21 +215,21 @@ export const ShoppingList = () => {
   }
 
   return (
-    <div className="dark min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+    <div className="dark min-h-screen bg-gradient-to-br from-purple-950 via-background to-purple-900/20">
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold mb-2 text-foreground bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold mb-2 text-foreground bg-gradient-to-r from-purple-400 via-purple-500 to-purple-600 bg-clip-text text-transparent">
             🛒 Lista de Compras
           </h1>
           <p className="text-muted-foreground">Lista colaborativa em tempo real</p>
         </div>
 
         {/* Add Item Form */}
-        <Card className="mb-8 shadow-glow border-border/50 bg-card/80 backdrop-blur-sm">
+        <Card className="mb-8 shadow-2xl border-purple-500/20 bg-gradient-to-br from-purple-900/30 to-purple-800/20 backdrop-blur-sm">
           <CardHeader>
             <CardTitle className="text-lg text-foreground flex items-center gap-2">
-              <Plus className="w-5 h-5 text-primary" />
+              <Plus className="w-5 h-5 text-purple-400" />
               Adicionar Novo Item
             </CardTitle>
           </CardHeader>
@@ -240,15 +240,15 @@ export const ShoppingList = () => {
                 value={newItemName}
                 onChange={(e) => setNewItemName(e.target.value)}
                 onKeyPress={handleKeyPress}
-                className="flex-1 border-border/50 focus:border-primary bg-background/50"
+                className="flex-1 border-purple-500/30 focus:border-purple-400 bg-purple-950/50 text-white placeholder:text-purple-300"
               />
               <Select value={newItemCategory} onValueChange={setNewItemCategory}>
-                <SelectTrigger className="w-full sm:w-48 border-border/50 focus:border-primary bg-background/50">
+                <SelectTrigger className="w-full sm:w-48 border-purple-500/30 focus:border-purple-400 bg-purple-950/50 text-white">
                   <SelectValue placeholder="Categoria" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-purple-900 border-purple-500/30">
                   {CATEGORIES.map((category) => (
-                    <SelectItem key={category} value={category}>
+                    <SelectItem key={category} value={category} className="text-white hover:bg-purple-800 focus:bg-purple-800">
                       {category}
                     </SelectItem>
                   ))}
@@ -256,7 +256,7 @@ export const ShoppingList = () => {
               </Select>
               <Button 
                 onClick={addItem}
-                className="bg-gradient-to-r from-primary to-primary-glow hover:shadow-glow transition-all duration-300 px-6"
+                className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 shadow-lg hover:shadow-purple-500/25 transition-all duration-300 px-6"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Adicionar
@@ -268,9 +268,9 @@ export const ShoppingList = () => {
         {/* Shopping List */}
         <div className="space-y-6">
           {Object.entries(groupedItems).map(([category, categoryItems]) => (
-            <Card key={category} className="shadow-elegant border-border/50 bg-card/80 backdrop-blur-sm">
+            <Card key={category} className="shadow-xl border-purple-500/20 bg-gradient-to-br from-purple-900/20 to-purple-800/10 backdrop-blur-sm">
               <CardHeader className="pb-4">
-                <CardTitle className="text-xl text-foreground bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
+                <CardTitle className="text-xl text-foreground bg-gradient-to-r from-purple-400 to-purple-500 bg-clip-text text-transparent">
                   {category}
                 </CardTitle>
               </CardHeader>
@@ -279,35 +279,35 @@ export const ShoppingList = () => {
                   {categoryItems.map((item) => (
                     <div
                       key={item.id}
-                      className={`group flex items-center space-x-4 p-4 rounded-lg border transition-all duration-300 hover:shadow-md ${
+                      className={`group flex items-center space-x-4 p-4 rounded-lg border transition-all duration-300 hover:shadow-lg ${
                         item.bought 
-                          ? 'bg-muted/30 border-muted/50 opacity-70' 
-                          : 'bg-background/40 border-border/50 hover:border-primary/50 hover:bg-background/60'
+                          ? 'bg-purple-900/20 border-purple-500/30 opacity-70' 
+                          : 'bg-purple-950/30 border-purple-500/20 hover:border-purple-400/50 hover:bg-purple-900/40'
                       }`}
                     >
                       <Checkbox
                         checked={item.bought}
                         onCheckedChange={() => toggleItem(item.id, item.bought)}
-                        className="data-[state=checked]:bg-success data-[state=checked]:border-success transition-all duration-200"
+                        className="data-[state=checked]:bg-purple-500 data-[state=checked]:border-purple-500 transition-all duration-200"
                       />
                       <span
                         className={`flex-1 transition-all duration-300 ${
                           item.bought 
-                            ? 'line-through text-muted-foreground' 
-                            : 'text-foreground group-hover:text-primary'
+                            ? 'line-through text-purple-300' 
+                            : 'text-foreground group-hover:text-purple-300'
                         }`}
                       >
                         {item.name}
                       </span>
                       <div className="flex items-center gap-2">
                         {item.bought && (
-                          <Check className="w-4 h-4 text-success" />
+                          <Check className="w-4 h-4 text-purple-400" />
                         )}
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => deleteItem(item.id)}
-                          className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-destructive hover:text-destructive hover:bg-destructive/10 p-2 h-8 w-8"
+                          className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-red-400 hover:text-red-300 hover:bg-red-500/10 p-2 h-8 w-8"
                         >
                           <Trash2 className="w-4 h-4" />
                         </Button>
@@ -322,7 +322,7 @@ export const ShoppingList = () => {
 
         {/* Empty State */}
         {items.length === 0 && (
-          <Card className="shadow-elegant border-border/50 bg-card/80 backdrop-blur-sm">
+          <Card className="shadow-xl border-purple-500/20 bg-gradient-to-br from-purple-900/20 to-purple-800/10 backdrop-blur-sm">
             <CardContent className="py-12 text-center">
               <div className="text-6xl mb-4 animate-pulse">🛒</div>
               <h3 className="text-xl font-semibold mb-2 text-foreground">Lista vazia</h3>
