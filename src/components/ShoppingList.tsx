@@ -275,16 +275,16 @@ export const ShoppingList = () => {
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-full p-0" align="start">
-                    <Command>
+                    <Command className="bg-violet-900 border-violet-500/30">
                       <CommandInput 
                         placeholder="Digite para buscar..." 
                         value={categorySearch}
                         onValueChange={setCategorySearch}
-                        className="border-violet-500/30"
+                        className="border-violet-500/30 bg-violet-950 text-white placeholder:text-violet-300"
                       />
-                      <CommandList className="max-h-[300px]">
-                        <CommandEmpty>Nenhuma categoria encontrada.</CommandEmpty>
-                        <CommandGroup>
+                      <CommandList className="max-h-[300px] bg-violet-900">
+                        <CommandEmpty className="text-violet-300">Nenhuma categoria encontrada.</CommandEmpty>
+                        <CommandGroup className="bg-violet-900">
                           {CATEGORIES
                             .filter(category => 
                               categorySearch === "" || category.toLowerCase().includes(categorySearch.toLowerCase())
@@ -298,7 +298,7 @@ export const ShoppingList = () => {
                                   setCategoryOpen(false);
                                   setCategorySearch("");
                                 }}
-                                className="text-white hover:bg-violet-800 focus:bg-violet-800 cursor-pointer"
+                                className="text-white hover:bg-violet-800 focus:bg-violet-800 cursor-pointer bg-violet-900 data-[selected=true]:bg-violet-800"
                               >
                                 <Check
                                   className={`mr-2 h-4 w-4 ${
