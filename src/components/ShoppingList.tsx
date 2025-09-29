@@ -18,15 +18,29 @@ interface ShoppingItem {
 }
 
 const CATEGORIES = [
-  "Frutas",
-  "Vegetais", 
-  "Carnes",
+  // Mercado
+  "Hortifrúti",
+  "Açougue", 
   "Laticínios",
+  "Padaria",
+  "Mercearia",
   "Bebidas",
+  "Congelados",
+  "Enlatados",
+  // Utilidades
   "Limpeza",
   "Higiene",
-  "Padaria",
-  "Congelados",
+  "Cozinha",
+  "Casa",
+  "Ferramentas",
+  "Eletrônicos",
+  "Farmácia",
+  "Pet Shop",
+  // Específicas
+  "Bebê",
+  "Escritório", 
+  "Jardinagem",
+  "Automotivo",
   "Outros"
 ];
 
