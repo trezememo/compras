@@ -275,16 +275,16 @@ export const ShoppingList = () => {
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-full p-0" align="start">
-                    <Command className="bg-violet-900 border-violet-500/30">
+                    <Command className="bg-slate-50 border-slate-200">
                       <CommandInput 
                         placeholder="Digite para buscar..." 
                         value={categorySearch}
                         onValueChange={setCategorySearch}
-                        className="border-violet-500/30 bg-violet-950 text-white placeholder:text-violet-300"
+                        className="border-slate-200 bg-white text-slate-900 placeholder:text-slate-500"
                       />
-                      <CommandList className="max-h-[300px] bg-violet-900">
-                        <CommandEmpty className="text-violet-300">Nenhuma categoria encontrada.</CommandEmpty>
-                        <CommandGroup className="bg-violet-900">
+                      <CommandList className="max-h-[300px] bg-slate-50">
+                        <CommandEmpty className="text-slate-600">Nenhuma categoria encontrada.</CommandEmpty>
+                        <CommandGroup className="bg-slate-50">
                           {CATEGORIES
                             .filter(category => 
                               categorySearch === "" || category.toLowerCase().includes(categorySearch.toLowerCase())
@@ -298,7 +298,7 @@ export const ShoppingList = () => {
                                   setCategoryOpen(false);
                                   setCategorySearch("");
                                 }}
-                                className="text-white hover:bg-violet-800 focus:bg-violet-800 cursor-pointer bg-violet-900 data-[selected=true]:bg-violet-800"
+                                className="text-slate-900 hover:bg-violet-100 focus:bg-violet-100 cursor-pointer bg-slate-50 data-[selected=true]:bg-violet-200"
                               >
                                 <Check
                                   className={`mr-2 h-4 w-4 ${
