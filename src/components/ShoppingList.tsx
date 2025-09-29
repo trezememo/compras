@@ -4,14 +4,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Check, Trash2 } from "lucide-react";
+import { Plus, Check, Trash2, ChevronDown, Search } from "lucide-react";
 
 interface ShoppingItem {
   id: string;
   name: string;
   category: string;
+  quantity?: number;
   bought: boolean;
   created_at?: string;
   updated_at?: string;
@@ -48,6 +50,9 @@ export const ShoppingList = () => {
   const [items, setItems] = useState<ShoppingItem[]>([]);
   const [newItemName, setNewItemName] = useState("");
   const [newItemCategory, setNewItemCategory] = useState("");
+  const [newItemQuantity, setNewItemQuantity] = useState<number>(1);
+  const [categoryOpen, setCategoryOpen] = useState(false);
+  const [categorySearch, setCategorySearch] = useState("");
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
@@ -124,6 +129,7 @@ export const ShoppingList = () => {
           {
             name: newItemName.trim(),
             category: newItemCategory,
+            quantity: newItemQuantity,
             bought: false
           }
         ]);
@@ -132,6 +138,9 @@ export const ShoppingList = () => {
 
       setNewItemName("");
       setNewItemCategory("");
+      setNewItemQuantity(1);
+      setCategoryOpen(false);
+      setCategorySearch("");
       
       toast({
         title: "Item adicionado",
@@ -205,9 +214,9 @@ export const ShoppingList = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-950 via-background to-purple-900/20 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-violet-950 via-purple-950 to-fuchsia-900 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-500 mx-auto mb-4"></div>
           <p className="text-muted-foreground">Carregando lista...</p>
         </div>
       </div>
@@ -215,52 +224,103 @@ export const ShoppingList = () => {
   }
 
   return (
-    <div className="dark min-h-screen bg-gradient-to-br from-purple-950 via-background to-purple-900/20">
+    <div className="dark min-h-screen bg-gradient-to-br from-violet-950 via-purple-950 to-fuchsia-900">
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold mb-2 text-foreground bg-gradient-to-r from-purple-400 via-purple-500 to-purple-600 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold mb-2 text-foreground bg-gradient-to-r from-violet-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent">
             🛒 Lista de Compras
           </h1>
           <p className="text-muted-foreground">Lista colaborativa em tempo real</p>
         </div>
 
         {/* Add Item Form */}
-        <Card className="mb-8 shadow-2xl border-purple-500/20 bg-gradient-to-br from-purple-900/30 to-purple-800/20 backdrop-blur-sm">
+        <Card className="mb-8 shadow-2xl border-violet-500/20 bg-gradient-to-br from-violet-900/30 to-fuchsia-900/20 backdrop-blur-sm">
           <CardHeader>
             <CardTitle className="text-lg text-foreground flex items-center gap-2">
-              <Plus className="w-5 h-5 text-purple-400" />
+              <Plus className="w-5 h-5 text-violet-400" />
               Adicionar Novo Item
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Input
-                placeholder="Nome do item"
-                value={newItemName}
-                onChange={(e) => setNewItemName(e.target.value)}
-                onKeyPress={handleKeyPress}
-                className="flex-1 border-purple-500/30 focus:border-purple-400 bg-purple-950/50 text-white placeholder:text-purple-300"
-              />
-              <Select value={newItemCategory} onValueChange={setNewItemCategory}>
-                <SelectTrigger className="w-full sm:w-48 border-purple-500/30 focus:border-purple-400 bg-purple-950/50 text-white">
-                  <SelectValue placeholder="Categoria" />
-                </SelectTrigger>
-                <SelectContent className="bg-purple-900 border-purple-500/30">
-                  {CATEGORIES.map((category) => (
-                    <SelectItem key={category} value={category} className="text-white hover:bg-purple-800 focus:bg-purple-800">
-                      {category}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Button 
-                onClick={addItem}
-                className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 shadow-lg hover:shadow-purple-500/25 transition-all duration-300 px-6"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Adicionar
-              </Button>
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Input
+                  placeholder="Nome do item"
+                  value={newItemName}
+                  onChange={(e) => setNewItemName(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  className="flex-1 border-violet-500/30 focus:border-violet-400 bg-violet-950/50 text-white placeholder:text-violet-300"
+                />
+                <Input
+                  type="number"
+                  placeholder="Qtd"
+                  value={newItemQuantity}
+                  onChange={(e) => setNewItemQuantity(parseInt(e.target.value) || 1)}
+                  min="1"
+                  className="w-20 border-violet-500/30 focus:border-violet-400 bg-violet-950/50 text-white placeholder:text-violet-300"
+                />
+              </div>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Popover open={categoryOpen} onOpenChange={setCategoryOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      aria-expanded={categoryOpen}
+                      className="flex-1 justify-between border-violet-500/30 focus:border-violet-400 bg-violet-950/50 text-white hover:bg-violet-900/50"
+                    >
+                      {newItemCategory || "Buscar categoria..."}
+                      <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-full p-0" align="start">
+                    <Command>
+                      <CommandInput 
+                        placeholder="Digite para buscar..." 
+                        value={categorySearch}
+                        onValueChange={setCategorySearch}
+                        className="border-violet-500/30"
+                      />
+                      <CommandList>
+                        <CommandEmpty>Nenhuma categoria encontrada.</CommandEmpty>
+                        <CommandGroup>
+                          {CATEGORIES
+                            .filter(category => 
+                              category.toLowerCase().includes(categorySearch.toLowerCase())
+                            )
+                            .map((category) => (
+                              <CommandItem
+                                key={category}
+                                value={category}
+                                onSelect={(currentValue) => {
+                                  setNewItemCategory(currentValue === newItemCategory ? "" : currentValue);
+                                  setCategoryOpen(false);
+                                  setCategorySearch("");
+                                }}
+                                className="text-white hover:bg-violet-800 focus:bg-violet-800"
+                              >
+                                <Check
+                                  className={`mr-2 h-4 w-4 ${
+                                    newItemCategory === category ? "opacity-100" : "opacity-0"
+                                  }`}
+                                />
+                                {category}
+                              </CommandItem>
+                            ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+                <Button 
+                  onClick={addItem}
+                  className="bg-gradient-to-r from-violet-500 to-fuchsia-500 hover:from-violet-600 hover:to-fuchsia-600 shadow-lg hover:shadow-violet-500/25 transition-all duration-300 px-6"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Adicionar
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -268,9 +328,9 @@ export const ShoppingList = () => {
         {/* Shopping List */}
         <div className="space-y-6">
           {Object.entries(groupedItems).map(([category, categoryItems]) => (
-            <Card key={category} className="shadow-xl border-purple-500/20 bg-gradient-to-br from-purple-900/20 to-purple-800/10 backdrop-blur-sm">
+            <Card key={category} className="shadow-xl border-violet-500/20 bg-gradient-to-br from-violet-900/20 to-fuchsia-900/10 backdrop-blur-sm">
               <CardHeader className="pb-4">
-                <CardTitle className="text-xl text-foreground bg-gradient-to-r from-purple-400 to-purple-500 bg-clip-text text-transparent">
+                <CardTitle className="text-xl text-foreground bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">
                   {category}
                 </CardTitle>
               </CardHeader>
@@ -281,27 +341,34 @@ export const ShoppingList = () => {
                       key={item.id}
                       className={`group flex items-center space-x-4 p-4 rounded-lg border transition-all duration-300 hover:shadow-lg ${
                         item.bought 
-                          ? 'bg-purple-900/20 border-purple-500/30 opacity-70' 
-                          : 'bg-purple-950/30 border-purple-500/20 hover:border-purple-400/50 hover:bg-purple-900/40'
+                          ? 'bg-violet-900/20 border-violet-500/30 opacity-70' 
+                          : 'bg-violet-950/30 border-violet-500/20 hover:border-violet-400/50 hover:bg-violet-900/40'
                       }`}
                     >
                       <Checkbox
                         checked={item.bought}
                         onCheckedChange={() => toggleItem(item.id, item.bought)}
-                        className="data-[state=checked]:bg-purple-500 data-[state=checked]:border-purple-500 transition-all duration-200"
+                        className="data-[state=checked]:bg-violet-500 data-[state=checked]:border-violet-500 transition-all duration-200"
                       />
-                      <span
-                        className={`flex-1 transition-all duration-300 ${
-                          item.bought 
-                            ? 'line-through text-purple-300' 
-                            : 'text-foreground group-hover:text-purple-300'
-                        }`}
-                      >
-                        {item.name}
-                      </span>
+                      <div className="flex-1 flex items-center gap-2">
+                        <span
+                          className={`transition-all duration-300 ${
+                            item.bought 
+                              ? 'line-through text-violet-300' 
+                              : 'text-foreground group-hover:text-violet-300'
+                          }`}
+                        >
+                          {item.name}
+                        </span>
+                        {item.quantity && item.quantity > 1 && (
+                          <span className="text-xs bg-violet-500/20 text-violet-300 px-2 py-1 rounded-full">
+                            {item.quantity}x
+                          </span>
+                        )}
+                      </div>
                       <div className="flex items-center gap-2">
                         {item.bought && (
-                          <Check className="w-4 h-4 text-purple-400" />
+                          <Check className="w-4 h-4 text-violet-400" />
                         )}
                         <Button
                           variant="ghost"
@@ -322,7 +389,7 @@ export const ShoppingList = () => {
 
         {/* Empty State */}
         {items.length === 0 && (
-          <Card className="shadow-xl border-purple-500/20 bg-gradient-to-br from-purple-900/20 to-purple-800/10 backdrop-blur-sm">
+          <Card className="shadow-xl border-violet-500/20 bg-gradient-to-br from-violet-900/20 to-fuchsia-900/10 backdrop-blur-sm">
             <CardContent className="py-12 text-center">
               <div className="text-6xl mb-4 animate-pulse">🛒</div>
               <h3 className="text-xl font-semibold mb-2 text-foreground">Lista vazia</h3>
