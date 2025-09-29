@@ -287,7 +287,7 @@ export const ShoppingList = () => {
                         <CommandGroup>
                           {CATEGORIES
                             .filter(category => 
-                              category.toLowerCase().includes(categorySearch.toLowerCase())
+                              categorySearch === "" || category.toLowerCase().includes(categorySearch.toLowerCase())
                             )
                             .map((category) => (
                               <CommandItem
